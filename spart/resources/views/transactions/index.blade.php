@@ -175,7 +175,7 @@
                                         </span>
                                     @endif
                                     
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']) && Auth::user()->role === 'admin')
+                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']) && (Auth::id() === $transaction->user_id || Auth::user()->role === 'admin'))
                                         <button type="button" 
                                                 onclick="confirmTransaction({{ $transaction->id }}, '{{ $transaction->sparepart->material_code ?? '' }}')"
                                                 class="text-green-600 hover:text-green-800" title="Confirm">

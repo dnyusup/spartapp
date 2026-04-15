@@ -35,10 +35,13 @@ Route::middleware('auth')->group(function () {
 
     // Admin Only Routes
     Route::middleware('admin')->group(function () {
-        Route::resource('spareparts', SparepartController::class);
+        Route::resource('spareparts', SparepartController::class)->except(['show']);
         Route::get('spareparts-export', [SparepartController::class, 'exportExcel'])->name('spareparts.export');
         Route::post('spareparts-import', [SparepartController::class, 'importExcel'])->name('spareparts.import');
         Route::resource('categories', CategoryController::class);
         Route::resource('users', UserController::class);
     });
+
+    // Allow all authenticated users to view sparepart detail
+    Route::get('spareparts/{sparepart}', [SparepartController::class, 'show'])->name('spareparts.show');
 });
