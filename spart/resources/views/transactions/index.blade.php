@@ -24,21 +24,23 @@
                     </div>
                     <div>
                         <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                        <select name="type[]" id="type" multiple
+                        <select name="type" id="type" 
                                 class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
-                            <option value="in" {{ collect(request('type'))->contains('in') ? 'selected' : '' }}>In</option>
-                            <option value="out" {{ collect(request('type'))->contains('out') ? 'selected' : '' }}>Out</option>
-                            <option value="adjustment" {{ collect(request('type'))->contains('adjustment') ? 'selected' : '' }}>Adjustment</option>
+                            <option value="">All Types</option>
+                            <option value="in" {{ request('type') == 'in' ? 'selected' : '' }}>In</option>
+                            <option value="out" {{ request('type') == 'out' ? 'selected' : '' }}>Out</option>
+                            <option value="adjustment" {{ request('type') == 'adjustment' ? 'selected' : '' }}>Adjustment</option>
                         </select>
                     </div>
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status[]" id="status" multiple
+                        <select name="status" id="status" 
                                 class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
-                            <option value="new" {{ collect(request('status'))->contains('new') ? 'selected' : '' }}>New</option>
-                            <option value="changed" {{ collect(request('status'))->contains('changed') ? 'selected' : '' }}>Changed</option>
-                            <option value="confirmed" {{ collect(request('status'))->contains('confirmed') ? 'selected' : '' }}>Confirmed</option>
-                            <option value="canceled" {{ collect(request('status'))->contains('canceled') ? 'selected' : '' }}>Canceled</option>
+                            <option value="">All Status</option>
+                            <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>New</option>
+                            <option value="changed" {{ request('status') == 'changed' ? 'selected' : '' }}>Changed</option>
+                            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                            <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>Canceled</option>
                         </select>
                     </div>
                 </div>

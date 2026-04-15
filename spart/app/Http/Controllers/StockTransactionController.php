@@ -34,21 +34,11 @@ class StockTransactionController extends Controller
         }
 
         if ($request->filled('type')) {
-            $type = $request->type;
-            if (is_array($type)) {
-                $query->whereIn('type', $type);
-            } else {
-                $query->where('type', $type);
-            }
+            $query->where('type', $request->type);
         }
 
         if ($request->filled('status')) {
-            $status = $request->status;
-            if (is_array($status)) {
-                $query->whereIn('status', $status);
-            } else {
-                $query->where('status', $status);
-            }
+            $query->where('status', $request->status);
         }
 
         if ($request->filled('date_from')) {
