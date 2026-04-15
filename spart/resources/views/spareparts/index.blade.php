@@ -1,6 +1,6 @@
 <x-layouts.app>
     <x-slot:title>Spareparts</x-slot:title>
-    <x-slot:header>Spareparts List</x-slot:header>
+    <x-slot:header>Spareparts List222</x-slot:header>
 
     <!-- Search & Filter -->
     <div class="bg-white shadow rounded-lg mb-6">
