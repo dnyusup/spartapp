@@ -422,15 +422,17 @@
         });
 
         // Initialize Tom Select for searchable name dropdown
-        if (typeof TomSelect !== 'undefined') {
-            new TomSelect('.tom-select-name', {
-                create: false,
-                sortField: { field: 'text', direction: 'asc' },
-                placeholder: 'Search name...',
-                onChange: function() {
-                    document.getElementById('filterForm').submit();
-                }
-            });
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof TomSelect !== 'undefined') {
+                new TomSelect('.tom-select-name', {
+                    create: false,
+                    sortField: { field: 'text', direction: 'asc' },
+                    placeholder: 'Search name...',
+                    onChange: function() {
+                        document.getElementById('filterForm').submit();
+                    }
+                });
+            }
+        });
     </script>
 </x-layouts.app>

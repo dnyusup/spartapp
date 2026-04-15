@@ -1,4 +1,5 @@
 import './bootstrap';
+import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
 import Alpine from 'alpinejs';
 import TomSelect from 'tom-select';
 

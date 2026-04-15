@@ -6,9 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'SPART' }} - Sparepart Inventory</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Use production build assets directly -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app-Ispsami6.css') }}">
-    <script src="{{ asset('build/assets/app-GJ7zJQpQ.js') }}" defer></script>
+    @vite(["resources/css/app.css", "resources/js/app.js"])
 </head>
 <body class="h-full font-sans gradient-bg" x-data="{ sidebarOpen: false }">
     <div class="min-h-full">

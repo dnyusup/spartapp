@@ -1,3 +1,7 @@
+/* Fix Tom Select dropdown background so it is not transparent */
+.ts-dropdown, .ts-dropdown .dropdown-content {
+    background: #fff !important;
+}
 @import 'tailwindcss';
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 @import 'tom-select/dist/css/tom-select.css';
