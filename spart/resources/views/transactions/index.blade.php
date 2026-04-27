@@ -176,7 +176,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex items-center gap-2">
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']) && (Auth::id() === $transaction->user_id || Auth::user()->role === 'admin'))
+                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']))
                                         <a href="{{ route('transactions.edit', $transaction) }}" class="text-blue-600 hover:text-blue-800" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -185,7 +185,6 @@
                                             <i class="fas fa-edit"></i>
                                         </span>
                                     @endif
-                                    
                                     @if(!in_array($transaction->status, ['confirmed', 'canceled']) && Auth::user()->role === 'admin')
                                         <button type="button" 
                                                 onclick="confirmTransaction({{ $transaction->id }}, '{{ $transaction->sparepart->material_code ?? '' }}')"
@@ -193,7 +192,7 @@
                                             <i class="fas fa-check-circle"></i>
                                         </button>
                                     @endif
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']) && (Auth::id() === $transaction->user_id || Auth::user()->role === 'admin'))
+                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']))
                                         <button type="button" 
                                                 onclick="cancelTransaction({{ $transaction->id }}, '{{ $transaction->sparepart->material_code ?? '' }}')"
                                                 class="text-red-600 hover:text-red-800" title="Cancel">
