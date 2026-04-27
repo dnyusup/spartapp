@@ -245,7 +245,7 @@
                         <select name="user_id" id="user_id_select" class="tom-select-user block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('user_id') border-red-500 @enderror" required>
                             <option value="">Pilih user...</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ old('user_id', Auth::id()) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                             @endforeach
                         </select>
                         <p class="mt-1 text-xs text-gray-500">Pilih nama user yang melakukan transaksi</p>
