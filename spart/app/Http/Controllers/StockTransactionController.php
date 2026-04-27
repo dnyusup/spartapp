@@ -76,7 +76,7 @@ class StockTransactionController extends Controller
             'sparepart_id' => 'required|exists:spareparts,id',
             'type' => 'required|in:in,out,adjustment',
             'quantity' => 'required|numeric|min:0.01',
-            'reference_no' => 'nullable|string|max:255',
+            'reference_no' => 'required|string|max:255', // now mandatory
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -87,9 +87,7 @@ class StockTransactionController extends Controller
         if ($validated['type'] === 'in') {
             $stockAfter = $stockBefore + $validated['quantity'];
         } elseif ($validated['type'] === 'out') {
-            if ($validated['quantity'] > $stockBefore) {
-                return back()->withErrors(['quantity' => 'Quantity exceeds available stock.'])->withInput();
-            }
+            // Allow stock to go negative
             $stockAfter = $stockBefore - $validated['quantity'];
         } else {
             $stockAfter = $validated['quantity'];

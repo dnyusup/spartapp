@@ -157,12 +157,12 @@
                         </div>
                     </div>
 
-                    <!-- Quantity with Stepper -->
+                    <!-- Quantity with Stepper (default blank) -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity <span class="text-red-500">*</span></label>
                         <div class="qty-stepper @error('quantity') border-red-500 @enderror">
-                            <input type="number" name="quantity" id="quantity" value="{{ old('quantity', '0.0') }}" required min="0" step="0.1"
-                                   placeholder="0.0">
+                            <input type="number" name="quantity" id="quantity" value="{{ old('quantity', '') }}" required min="0" step="0.1"
+                                   placeholder="Masukkan jumlah">
                             <button type="button" onclick="adjustQty(-1)">−</button>
                             <button type="button" onclick="adjustQty(1)">+</button>
                         </div>
@@ -181,17 +181,21 @@
                                placeholder="PC">
                     </div>
 
-                    <!-- Order Number (Reference No) - Free Text -->
+                    <!-- Order Number (Reference No) - Mandatory -->
                     <div>
-                        <label for="reference_no" class="block text-sm font-medium text-gray-700 mb-1">Order Number</label>
+                        <label for="reference_no" class="block text-sm font-medium text-gray-700 mb-1">Order Number <span class="text-red-500">*</span></label>
                         <input type="text" name="reference_no" id="reference_no" value="{{ old('reference_no') }}"
-                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"
-                               placeholder="DO No., PO No., WO No., or other reference">
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('reference_no') border-red-500 @enderror"
+                               placeholder="DO No., PO No., WO No., or other reference" required>
+                        @error('reference_no')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <!-- Transaction Type (Default: Out) -->
+                    <!-- Transaction Type (role-based) -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Transaction Type <span class="text-red-500">*</span></label>
+                        @if(auth()->user()->role === 'admin')
                         <div class="grid grid-cols-3 gap-3">
                             <label class="flex items-center justify-center p-4 border rounded-lg cursor-pointer transition hover:border-green-400 
                                           {{ old('type') == 'in' ? 'border-green-500 bg-green-50' : 'border-gray-300' }}">
@@ -218,6 +222,17 @@
                                 </div>
                             </label>
                         </div>
+                        @else
+                        <div class="grid grid-cols-1">
+                            <label class="flex items-center justify-center p-4 border rounded-lg bg-red-50 border-red-500">
+                                <input type="radio" name="type" value="out" class="sr-only" checked readonly>
+                                <div class="text-center">
+                                    <i class="fas fa-arrow-up text-red-500 text-xl mb-1"></i>
+                                    <p class="text-sm font-medium">Out</p>
+                                </div>
+                            </label>
+                        </div>
+                        @endif
                         @error('type')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

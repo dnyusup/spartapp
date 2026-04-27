@@ -2,6 +2,39 @@
     <x-slot:title>Dashboard</x-slot:title>
     <x-slot:header>Dashboard</x-slot:header>
 
+    <!-- Quick Actions (moved to top) -->
+    <div class="mb-8 bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+            Quick Actions
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('spareparts.create') }}" class="flex flex-col items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition">
+                    <i class="fas fa-plus-circle text-primary-600 text-2xl mb-2"></i>
+                    <span class="text-sm font-medium text-primary-700">Add Sparepart</span>
+                </a>
+                <a href="{{ route('transactions.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                    <i class="fas fa-exchange-alt text-green-600 text-2xl mb-2"></i>
+                    <span class="text-sm font-medium text-green-700">New Transaction</span>
+                </a>
+                <a href="{{ route('categories.create') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+                    <i class="fas fa-folder-plus text-purple-600 text-2xl mb-2"></i>
+                    <span class="text-sm font-medium text-purple-700">Add Category</span>
+                </a>
+                <a href="{{ route('spareparts.index', ['low_stock' => 1]) }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl mb-2"></i>
+                    <span class="text-sm font-medium text-red-700">Check Low Stock</span>
+                </a>
+            @else
+                <a href="{{ route('transactions.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                    <i class="fas fa-exchange-alt text-green-600 text-2xl mb-2"></i>
+                    <span class="text-sm font-medium text-green-700">New Transaction</span>
+                </a>
+            @endif
+        </div>
+    </div>
+
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
         <!-- Total Spareparts -->
@@ -136,29 +169,5 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="mt-8 bg-white shadow rounded-lg p-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-            <i class="fas fa-bolt text-yellow-500 mr-2"></i>
-            Quick Actions
-        </h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <a href="{{ route('spareparts.create') }}" class="flex flex-col items-center p-4 bg-primary-50 rounded-lg hover:bg-primary-100 transition">
-                <i class="fas fa-plus-circle text-primary-600 text-2xl mb-2"></i>
-                <span class="text-sm font-medium text-primary-700">Add Sparepart</span>
-            </a>
-            <a href="{{ route('transactions.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
-                <i class="fas fa-exchange-alt text-green-600 text-2xl mb-2"></i>
-                <span class="text-sm font-medium text-green-700">New Transaction</span>
-            </a>
-            <a href="{{ route('categories.create') }}" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
-                <i class="fas fa-folder-plus text-purple-600 text-2xl mb-2"></i>
-                <span class="text-sm font-medium text-purple-700">Add Category</span>
-            </a>
-            <a href="{{ route('spareparts.index', ['low_stock' => 1]) }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
-                <i class="fas fa-exclamation-triangle text-red-600 text-2xl mb-2"></i>
-                <span class="text-sm font-medium text-red-700">Check Low Stock</span>
-            </a>
-        </div>
-    </div>
+    <!-- Quick Actions sudah dipindah ke atas dan diatur tampilannya sesuai role user -->
 </x-layouts.app>
