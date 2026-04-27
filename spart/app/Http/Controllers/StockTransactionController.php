@@ -251,10 +251,6 @@ class StockTransactionController extends Controller
 
     public function cancel(StockTransaction $transaction)
     {
-        // Only admin can cancel
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Only admin can cancel transactions.');
-        }
 
         // Cannot cancel confirmed or already canceled transactions
         if ($transaction->status === 'confirmed') {
