@@ -151,8 +151,8 @@ class StockTransactionController extends Controller
 
         $transaction->load(['sparepart', 'user']);
         $spareparts = Sparepart::orderBy('material_code')->get();
-        
-        return view('transactions.edit', compact('transaction', 'spareparts'));
+        $users = \App\Models\User::orderBy('name')->get();
+        return view('transactions.edit', compact('transaction', 'spareparts', 'users'));
     }
 
     public function update(Request $request, StockTransaction $transaction)
@@ -172,7 +172,12 @@ class StockTransactionController extends Controller
             'sparepart_id' => 'required|exists:spareparts,id',
             'type' => 'required|in:in,out,adjustment',
             'quantity' => 'required|numeric|min:0.01',
-            'reference_no' => 'nullable|string|max:255',
+            'reference_no' => [
+                'required',
+                'numeric',
+                'digits_between:8,10',
+            ],
+            'user_id' => 'required|exists:users,id',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -206,6 +211,7 @@ class StockTransactionController extends Controller
             // Update transaction
             $transaction->update([
                 'sparepart_id' => $validated['sparepart_id'],
+                'user_id' => $validated['user_id'],
                 'type' => $validated['type'],
                 'quantity' => $validated['quantity'],
                 'stock_before' => $stockBefore,
