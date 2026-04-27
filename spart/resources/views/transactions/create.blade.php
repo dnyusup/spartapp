@@ -181,12 +181,13 @@
                                placeholder="PC">
                     </div>
 
-                    <!-- Order Number (Reference No) - Mandatory -->
+                    <!-- Order Number (Reference No) - Numeric, 8-10 digits -->
                     <div>
                         <label for="reference_no" class="block text-sm font-medium text-gray-700 mb-1">Order Number <span class="text-red-500">*</span></label>
                         <input type="text" name="reference_no" id="reference_no" value="{{ old('reference_no') }}"
                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('reference_no') border-red-500 @enderror"
-                               placeholder="DO No., PO No., WO No., or other reference" required>
+                               placeholder="Masukkan nomor order (8-10 digit angka)" required pattern="\\d{8,10}" maxlength="10" minlength="8">
+                        <p class="text-xs text-gray-500">Order number harus angka 8-10 digit.</p>
                         @error('reference_no')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -238,18 +239,19 @@
                         @enderror
                     </div>
 
-                    <!-- Name (Auto-fill dari user login) -->
+                    <!-- Name (Dropdown dari data user) -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <input type="text" id="user_name" readonly
-                                   class="block w-full rounded-md border-gray-200 bg-gray-50 shadow-sm sm:text-sm px-3 py-2 pr-10 border text-gray-600"
-                                   value="{{ Auth::user()->name }}">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
-                            </div>
-                        </div>
-                        <p class="mt-1 text-xs text-gray-500">Auto-fill berdasarkan user yang login</p>
+                        <select name="user_id" id="user_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('user_id') border-red-500 @enderror" required>
+                            <option value="">Pilih user...</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ old('user_id', Auth::id()) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Pilih nama user yang melakukan transaksi</p>
+                        @error('user_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Remark (Notes) -->

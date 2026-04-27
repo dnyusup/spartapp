@@ -79,8 +79,8 @@ class StockTransactionController extends Controller
             $sparepart = Sparepart::findOrFail($request->sparepart_id);
         }
         $spareparts = Sparepart::orderBy('material_code')->get();
-        
-        return view('transactions.create', compact('spareparts', 'sparepart'));
+        $users = \App\Models\User::orderBy('name')->get();
+        return view('transactions.create', compact('spareparts', 'sparepart', 'users'));
     }
 
     public function store(Request $request)
@@ -89,7 +89,12 @@ class StockTransactionController extends Controller
             'sparepart_id' => 'required|exists:spareparts,id',
             'type' => 'required|in:in,out,adjustment',
             'quantity' => 'required|numeric|min:0.01',
-            'reference_no' => 'required|string|max:255', // now mandatory
+            'reference_no' => [
+                'required',
+                'numeric',
+                'digits_between:8,10',
+            ],
+            'user_id' => 'required|exists:users,id',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -109,7 +114,7 @@ class StockTransactionController extends Controller
         DB::transaction(function () use ($validated, $sparepart, $stockBefore, $stockAfter) {
             StockTransaction::create([
                 'sparepart_id' => $validated['sparepart_id'],
-                'user_id' => Auth::id(),
+                'user_id' => $validated['user_id'],
                 'type' => $validated['type'],
                 'quantity' => $validated['quantity'],
                 'stock_before' => $stockBefore,
