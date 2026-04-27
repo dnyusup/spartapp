@@ -56,14 +56,16 @@
                 </li>
                 
             </ul>
-        </li>
-        <li>
-            <p class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-3">Operations</p>
-            <ul role="list" class="-mx-2 space-y-2">
-                <li>
-                    <a href="{{ route('transactions.index') }}" 
-                       class="nav-item group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium {{ request()->routeIs('transactions.*') ? 'active text-white' : 'text-slate-400 hover:text-white' }}">
-                        <span class="nav-icon w-10 h-10 rounded-lg {{ request()->routeIs('transactions.*') ? 'bg-blue-500/20' : 'bg-slate-700/50 group-hover:bg-slate-600' }} flex items-center justify-center transition-all">
+                    @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('categories.index') }}" 
+                       class="nav-item group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium {{ request()->routeIs('categories.*') ? 'active text-white' : 'text-slate-400 hover:text-white' }}">
+                        <span class="nav-icon w-10 h-10 rounded-lg {{ request()->routeIs('categories.*') ? 'bg-blue-500/20' : 'bg-slate-700/50 group-hover:bg-slate-600' }} flex items-center justify-center transition-all">
+                            <i class="fas fa-tags text-lg {{ request()->routeIs('categories.*') ? 'text-blue-400' : '' }}"></i>
+                        </span>
+                        <span>Categories</span>
+                        <span class="nav-desc">Group & organize</span>
+                    </a>
+                    @endif
                             <i class="fas fa-exchange-alt text-lg {{ request()->routeIs('transactions.*') ? 'text-blue-400' : '' }}"></i>
                         </span>
                         <span class="flex flex-col justify-center">
