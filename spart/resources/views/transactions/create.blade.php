@@ -239,10 +239,10 @@
                         @enderror
                     </div>
 
-                    <!-- Name (Dropdown dari data user) -->
+                    <!-- Name (Dropdown dari data user, searchable) -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                        <select name="user_id" id="user_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('user_id') border-red-500 @enderror" required>
+                        <select name="user_id" id="user_id_select" class="tom-select-user block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('user_id') border-red-500 @enderror" required>
                             <option value="">Pilih user...</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id', Auth::id()) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
@@ -253,6 +253,22 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+</div>
+
+<!-- TomSelect for user dropdown -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.TomSelect) {
+            new TomSelect('#user_id_select', {
+                create: false,
+                sortField: 'text',
+                placeholder: 'Cari nama user...'
+            });
+        }
+    });
+</script>
 
                     <!-- Remark (Notes) -->
                     <div>
