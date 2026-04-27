@@ -144,10 +144,7 @@ class StockTransactionController extends Controller
                 ->with('error', 'Confirmed transactions cannot be edited.');
         }
 
-        // Check if user can edit (creator or admin)
-        if (Auth::id() !== $transaction->user_id && Auth::user()->role !== 'admin') {
-            abort(403, 'You are not authorized to edit this transaction.');
-        }
+        // Semua user bisa edit transaction apapun selama belum confirmed
 
         $transaction->load(['sparepart', 'user']);
         $spareparts = Sparepart::orderBy('material_code')->get();
@@ -163,10 +160,7 @@ class StockTransactionController extends Controller
                 ->with('error', 'Confirmed transactions cannot be edited.');
         }
 
-        // Check if user can edit (creator or admin)
-        if (Auth::id() !== $transaction->user_id && Auth::user()->role !== 'admin') {
-            abort(403, 'You are not authorized to edit this transaction.');
-        }
+        // Semua user bisa edit transaction apapun selama belum confirmed
 
         $validated = $request->validate([
             'sparepart_id' => 'required|exists:spareparts,id',
