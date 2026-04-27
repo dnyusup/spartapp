@@ -27,32 +27,30 @@
                         <select name="type" id="type" 
                                 class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
                             <option value="">All Types</option>
-                            <option value="in" {{ request('type') == 'in' ? 'selected' : '' }}>In</option>
-                            <option value="out" {{ request('type') == 'out' ? 'selected' : '' }}>Out</option>
-                            <option value="adjustment" {{ request('type') == 'adjustment' ? 'selected' : '' }}>Adjustment</option>
+                            <option value="in" {{ (request('type', $defaultType ?? '') == 'in') ? 'selected' : '' }}>In</option>
+                            <option value="out" {{ (request('type', $defaultType ?? '') == 'out') ? 'selected' : '' }}>Out</option>
+                            <option value="adjustment" {{ (request('type', $defaultType ?? '') == 'adjustment') ? 'selected' : '' }}>Adjustment</option>
                         </select>
                     </div>
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status" id="status" 
-                                class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
-                            <option value="">All Status</option>
-                            <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>New</option>
-                            <option value="changed" {{ request('status') == 'changed' ? 'selected' : '' }}>Changed</option>
-                            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                            <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                        <select name="status[]" id="status-filter" multiple>
+                            <option value="new" {{ in_array('new', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>New</option>
+                            <option value="changed" {{ in_array('changed', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Changed</option>
+                            <option value="confirmed" {{ in_array('confirmed', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Confirmed</option>
+                            <option value="canceled" {{ in_array('canceled', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Canceled</option>
                         </select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                        <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
-                        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                           <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                           <input type="date" name="date_from" id="date_from" value="{{ request('date_from', $defaultFrom ?? '') }}"
                                class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
                     </div>
                     <div>
-                        <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
-                        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                           <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                           <input type="date" name="date_to" id="date_to" value="{{ request('date_to', $defaultTo ?? '') }}"
                                class="filter-input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
                     </div>
                     <div class="flex items-end">
@@ -62,6 +60,19 @@
                     </div>
                 </div>
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (window.TomSelect) {
+                        new TomSelect('#status-filter', {
+                            plugins: ['remove_button'],
+                            onChange: function() {
+                                document.getElementById('filterForm').submit();
+                            },
+                            placeholder: 'Select status...'
+                        });
+                    }
+                });
+            </script>
         </div>
     </div>
 
@@ -295,7 +306,15 @@
                 <input type="hidden" name="search" value="{{ request('search') }}">
                 <input type="hidden" name="user_id" value="{{ request('user_id') }}">
                 <input type="hidden" name="type" value="{{ request('type') }}">
-                <input type="hidden" name="status" value="{{ request('status') }}">
+                @php
+                    $statuses = request('status');
+                    if (!is_array($statuses)) {
+                        $statuses = $statuses ? [$statuses] : [];
+                    }
+                @endphp
+                @foreach($statuses as $status)
+                    <input type="hidden" name="status[]" value="{{ $status }}">
+                @endforeach
                 <input type="hidden" name="date_from" value="{{ request('date_from') }}">
                 <input type="hidden" name="date_to" value="{{ request('date_to') }}">
                 

@@ -51,22 +51,22 @@
             Showing {{ $spareparts->firstItem() ?? 0 }} - {{ $spareparts->lastItem() ?? 0 }} of {{ $spareparts->total() }} spareparts
         </p>
         <div class="flex flex-wrap items-center gap-2">
-            <!-- Export Excel Button -->
-            <a href="{{ route('spareparts.export') }}" 
-               class="inline-flex items-center px-4 py-2 border border-emerald-300 text-sm font-medium rounded-md shadow-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors">
-                <i class="fas fa-file-excel mr-2"></i>Export Excel
-            </a>
-            
-            <!-- Import Excel Button -->
+            @if(auth()->user()->isAdmin())
+                <!-- Export Excel Button -->
+                <a href="{{ route('spareparts.export') }}" 
+                   class="inline-flex items-center px-4 py-2 border border-emerald-300 text-sm font-medium rounded-md shadow-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors">
+                    <i class="fas fa-file-excel mr-2"></i>Export Excel
+                </a>
+                <!-- Import Excel Button -->
                 <button type="button" 
                     onclick="console.log('import click'); document.getElementById('importModal').classList.remove('hidden')"
                     class="inline-flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-md shadow-sm text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
                 <i class="fas fa-file-upload mr-2"></i>Import Excel
-            </button>
-            
-            <a href="{{ route('spareparts.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
-                <i class="fas fa-plus mr-2"></i>Add Sparepart
-            </a>
+                </button>
+                <a href="{{ route('spareparts.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
+                    <i class="fas fa-plus mr-2"></i>Add Sparepart
+                </a>
+            @endif
         </div>
     </div>
 
@@ -124,26 +124,32 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('transactions.create', ['sparepart_id' => $sparepart->id]) }}" 
-                                       class="text-green-600 hover:text-green-900" title="Transaction">
-                                        <i class="fas fa-exchange-alt"></i>
-                                    </a>
-                                    <a href="{{ route('spareparts.show', $sparepart) }}" 
-                                       class="text-primary-600 hover:text-primary-900" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('spareparts.edit', $sparepart) }}" 
-                                       class="text-yellow-600 hover:text-yellow-900" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('spareparts.destroy', $sparepart) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this sparepart?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900" title="Delete">
-                                            <i class="fas fa-trash"></i>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('transactions.create', ['sparepart_id' => $sparepart->id]) }}" 
+                                           class="text-green-600 hover:text-green-900" title="Transaction">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </a>
+                                        <a href="{{ route('spareparts.show', $sparepart) }}" 
+                                           class="text-primary-600 hover:text-primary-900" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('spareparts.edit', $sparepart) }}" 
+                                           class="text-yellow-600 hover:text-yellow-900" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('spareparts.destroy', $sparepart) }}" method="POST" class="inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this sparepart?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <button class="text-gray-400 cursor-not-allowed" title="View Only" disabled>
+                                            <i class="fas fa-eye-slash"></i>
                                         </button>
-                                    </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

@@ -33,15 +33,16 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
+    // Allow all authenticated users to view sparepart list and detail
+    Route::get('spareparts', [SparepartController::class, 'index'])->name('spareparts.index');
+    Route::get('spareparts/{sparepart}', [SparepartController::class, 'show'])->name('spareparts.show');
+
     // Admin Only Routes
     Route::middleware('admin')->group(function () {
-        Route::resource('spareparts', SparepartController::class)->except(['show']);
+        Route::resource('spareparts', SparepartController::class)->except(['index', 'show']);
         Route::get('spareparts-export', [SparepartController::class, 'exportExcel'])->name('spareparts.export');
         Route::post('spareparts-import', [SparepartController::class, 'importExcel'])->name('spareparts.import');
         Route::resource('categories', CategoryController::class);
         Route::resource('users', UserController::class);
     });
-
-    // Allow all authenticated users to view sparepart detail
-    Route::get('spareparts/{sparepart}', [SparepartController::class, 'show'])->name('spareparts.show');
 });

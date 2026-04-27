@@ -16,6 +16,12 @@ class StockTransactionController extends Controller
     {
         $query = StockTransaction::with(['sparepart', 'user', 'changedByUser']);
 
+        // Default filter values
+        $defaultType = $request->has('type') ? $request->type : 'out';
+        $defaultStatuses = $request->has('status') ? (array)$request->status : ['new', 'changed'];
+        $defaultFrom = $request->has('date_from') ? $request->date_from : now()->format('Y-m-d');
+        $defaultTo = $request->has('date_to') ? $request->date_to : now()->format('Y-m-d');
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -33,20 +39,21 @@ class StockTransactionController extends Controller
             });
         }
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+
+        if ($defaultType) {
+            $query->where('type', $defaultType);
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if ($defaultStatuses) {
+            $query->whereIn('status', $defaultStatuses);
         }
 
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
+        if ($defaultFrom) {
+            $query->whereDate('created_at', '>=', $defaultFrom);
         }
 
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
+        if ($defaultTo) {
+            $query->whereDate('created_at', '<=', $defaultTo);
         }
 
         if ($request->filled('user_id')) {
@@ -56,7 +63,13 @@ class StockTransactionController extends Controller
         $transactions = $query->latest()->paginate(20)->withQueryString();
         $users = User::orderBy('name')->get();
 
-        return view('transactions.index', compact('transactions', 'users'));
+        return view('transactions.index', compact('transactions', 'users'))
+            ->with([
+                'defaultType' => $defaultType,
+                'defaultStatuses' => $defaultStatuses,
+                'defaultFrom' => $defaultFrom,
+                'defaultTo' => $defaultTo,
+            ]);
     }
 
     public function create(Request $request)
@@ -294,7 +307,12 @@ class StockTransactionController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $statuses = $request->status;
+            if (is_array($statuses)) {
+                $query->whereIn('status', $statuses);
+            } else {
+                $query->where('status', $statuses);
+            }
         }
 
         if ($request->filled('date_from')) {
@@ -309,19 +327,22 @@ class StockTransactionController extends Controller
             $query->where('user_id', $request->user_id);
         }
 
-        // If confirm_all is checked and user is admin, update all new/changed transactions to confirmed
+        // Jika confirm_all, update status setelah export
+        $filename = 'transactions_' . date('Y-m-d_His') . '.xlsx';
+        $downloadResponse = $excelService->download(clone $query, $filename);
+
         if ($request->boolean('confirm_all') && Auth::user()->isAdmin()) {
-            $confirmQuery = clone $query;
-            $confirmQuery->whereIn('status', ['new', 'changed'])
-                ->update([
-                    'status' => 'confirmed',
-                    'changed_by' => Auth::id(),
-                    'changed_at' => now(),
-                ]);
+            $idsToConfirm = (clone $query)->whereIn('status', ['new', 'changed'])->pluck('id');
+            if ($idsToConfirm->count() > 0) {
+                StockTransaction::whereIn('id', $idsToConfirm)
+                    ->update([
+                        'status' => 'confirmed',
+                        'changed_by' => Auth::id(),
+                        'changed_at' => now(),
+                    ]);
+            }
         }
 
-        $filename = 'transactions_' . date('Y-m-d_His') . '.xlsx';
-        
-        return $excelService->download($query, $filename);
+        return $downloadResponse;
     }
 }

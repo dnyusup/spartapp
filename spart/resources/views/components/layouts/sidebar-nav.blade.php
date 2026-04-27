@@ -23,11 +23,25 @@
                             <i class="fas fa-box text-lg {{ request()->routeIs('spareparts.*') ? 'text-blue-400' : '' }}"></i>
                         </span>
                         <span class="flex flex-col justify-center">
-                            <span>Spareparts</span>
+                            <span>Material Master</span>
                             <span class="text-[10px] text-slate-500 font-normal">Manage inventory</span>
                         </span>
                     </a>
                 </li>
+                @else
+                <li>
+                    <a href="{{ route('spareparts.index') }}" 
+                       class="nav-item group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium {{ request()->routeIs('spareparts.*') ? 'active text-white' : 'text-slate-400 hover:text-white' }}">
+                        <span class="nav-icon w-10 h-10 rounded-lg {{ request()->routeIs('spareparts.*') ? 'bg-blue-500/20' : 'bg-slate-700/50 group-hover:bg-slate-600' }} flex items-center justify-center transition-all">
+                            <i class="fas fa-box text-lg {{ request()->routeIs('spareparts.*') ? 'text-blue-400' : '' }}"></i>
+                        </span>
+                        <span class="flex flex-col justify-center">
+                            <span>Material Master</span>
+                            <span class="text-[10px] text-slate-500 font-normal">View inventory</span>
+                        </span>
+                    </a>
+                </li>
+                @endif
                 <li>
                     <a href="{{ route('categories.index') }}" 
                        class="nav-item group flex gap-x-3 rounded-xl p-3 text-sm leading-6 font-medium {{ request()->routeIs('categories.*') ? 'active text-white' : 'text-slate-400 hover:text-white' }}">
@@ -40,7 +54,7 @@
                         </span>
                     </a>
                 </li>
-                @endif
+                
             </ul>
         </li>
         <li>
