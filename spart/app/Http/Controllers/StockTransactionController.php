@@ -121,6 +121,8 @@ class StockTransactionController extends Controller
                 'stock_after' => $stockAfter,
                 'reference_no' => $validated['reference_no'],
                 'notes' => $validated['notes'],
+                'changed_by' => Auth::id(),
+                'changed_at' => now(),
             ]);
 
             $sparepart->update(['stock' => $stockAfter]);
