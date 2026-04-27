@@ -154,7 +154,8 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($transaction->status === 'new')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 cursor-help"
+                                          title="Created by {{ $transaction->user->name ?? 'Unknown' }} at {{ $transaction->created_at?->format('d M Y H:i') ?? '-' }}">
                                         <i class="fas fa-circle text-xs mr-1"></i>New
                                     </span>
                                 @elseif($transaction->status === 'confirmed')
