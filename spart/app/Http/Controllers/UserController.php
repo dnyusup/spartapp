@@ -30,7 +30,11 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        $users = $query
+            ->orderByRaw("FIELD(role, 'admin', 'user')")
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
         return view('users.index', compact('users'));
     }
 
