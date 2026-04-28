@@ -2,6 +2,33 @@
     <x-slot:title>Users</x-slot:title>
     
     <div class="space-y-6">
+                <!-- Filter & Search -->
+                <form method="GET" action="{{ route('users.index') }}" class="mb-4">
+                    <div class="flex flex-col sm:flex-row gap-3 items-center">
+                        <div>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, user id, email..." class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 w-64">
+                        </div>
+                        <div>
+                            <select name="role" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">All Roles</option>
+                                <option value="admin" {{ request('role')==='admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="user" {{ request('role')==='user' ? 'selected' : '' }}>User</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all">
+                                <i class="fas fa-search"></i> <span>Filter</span>
+                            </button>
+                        </div>
+                        @if(request('search') || request('role'))
+                        <div>
+                            <a href="{{ route('users.index') }}" class="inline-flex items-center gap-2 px-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-300 transition-all">
+                                <i class="fas fa-times"></i> <span>Reset</span>
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                </form>
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
