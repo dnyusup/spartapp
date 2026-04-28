@@ -311,6 +311,10 @@
                     if (!is_array($statuses)) {
                         $statuses = $statuses ? [$statuses] : [];
                     }
+                    // Jika filter status kosong, gunakan defaultStatuses (array dari controller)
+                    if (empty($statuses) && !empty($defaultStatuses)) {
+                        $statuses = $defaultStatuses;
+                    }
                 @endphp
                 @foreach($statuses as $status)
                     <input type="hidden" name="status[]" value="{{ $status }}">
