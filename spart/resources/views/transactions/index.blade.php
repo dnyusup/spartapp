@@ -319,8 +319,8 @@
                 @foreach($statuses as $status)
                     <input type="hidden" name="status[]" value="{{ $status }}">
                 @endforeach
-                <input type="hidden" name="date_from" value="{{ request('date_from') }}">
-                <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                <input type="hidden" name="date_from" value="{{ request('date_from', $defaultFrom ?? '') }}">
+                <input type="hidden" name="date_to" value="{{ request('date_to', $defaultTo ?? '') }}">
                 
                 <div class="px-6 py-4">
                     <p class="text-gray-600 mb-4">Export {{ $transactions->total() }} transactions to Excel file.</p>
