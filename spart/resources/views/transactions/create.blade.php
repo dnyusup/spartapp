@@ -269,7 +269,7 @@
         if (window.TomSelect) {
             new TomSelect('#user_id_select', {
                 create: false,
-                sortField: null, // Keep Blade order
+                sortField: 'text',
                 placeholder: 'Cari nama user...'
             });
         }
