@@ -271,7 +271,7 @@
         if (window.TomSelect) {
             new TomSelect('#user_id_select', {
                 create: false,
-                sortField: 'text',
+                sortField: null, // Disable sorting, keep Blade/Controller order
                 placeholder: 'Cari nama user...'
             });
         }
