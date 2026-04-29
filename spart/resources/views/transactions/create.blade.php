@@ -247,7 +247,7 @@
                             @php
                                 $currentUserId = auth()->id();
                                 $currentUser = $users->firstWhere('id', $currentUserId);
-                                $otherUsers = $users->filter(fn($u) => $u->id !== $currentUserId);
+                                $otherUsers = $users->filter(fn($u) => $u->id !== $currentUserId)->sortBy('name');
                             @endphp
                             @if($currentUser)
                                 <option value="{{ $currentUser->id }}" {{ old('user_id') == $currentUser->id ? 'selected' : '' }}>{{ $currentUser->name }}</option>
