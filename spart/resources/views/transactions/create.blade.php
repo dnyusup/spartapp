@@ -271,7 +271,7 @@
         if (window.TomSelect) {
             new TomSelect('#user_id_select', {
                 create: false,
-                sortField: [], // Disable sorting, keep Blade order
+                sortField: null, // Benar-benar matikan sorting, urutan sesuai Blade
                 placeholder: 'Cari nama user...'
             });
         }
