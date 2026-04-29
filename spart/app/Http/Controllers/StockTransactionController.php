@@ -80,7 +80,13 @@ class StockTransactionController extends Controller
         }
         $spareparts = Sparepart::orderBy('material_code')->get();
         $currentUserId = Auth::id();
-        $users = \App\Models\User::orderByRaw("id = ? DESC, name ASC", [$currentUserId])->get();
+        $allUsers = \App\Models\User::orderBy('name')->get();
+        $currentUser = $allUsers->firstWhere('id', $currentUserId);
+        $users = collect();
+        if ($currentUser) {
+            $users->push($currentUser);
+        }
+        $users = $users->merge($allUsers->filter(fn($u) => $u->id !== $currentUserId));
         return view('transactions.create', compact('spareparts', 'sparepart', 'users'));
     }
 
