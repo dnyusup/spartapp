@@ -79,7 +79,8 @@ class StockTransactionController extends Controller
             $sparepart = Sparepart::findOrFail($request->sparepart_id);
         }
         $spareparts = Sparepart::orderBy('material_code')->get();
-        $users = \App\Models\User::orderBy('name')->get();
+        $currentUserId = Auth::id();
+        $users = \App\Models\User::orderByRaw("id = ? DESC, name ASC", [$currentUserId])->get();
         return view('transactions.create', compact('spareparts', 'sparepart', 'users'));
     }
 
