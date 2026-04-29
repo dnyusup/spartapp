@@ -246,23 +246,13 @@
                             <option value="">Pilih user...</option>
                             @php
                                 $currentUserId = auth()->id();
-                                $currentUser = null;
-                                $otherUsersArr = [];
-                                foreach ($users as $u) {
-                                    if ($u->id == $currentUserId) {
-                                        $currentUser = $u;
-                                    } else {
-                                        $otherUsersArr[] = $u;
-                                    }
-                                }
-                                usort($otherUsersArr, function($a, $b) {
-                                    return strcmp($a->name, $b->name);
-                                });
+                                $currentUser = $users->firstWhere('id', $currentUserId);
+                                $otherUsers = $users->filter(fn($u) => $u->id !== $currentUserId);
                             @endphp
                             @if($currentUser)
                                 <option value="{{ $currentUser->id }}" {{ old('user_id') == $currentUser->id ? 'selected' : '' }}>{{ $currentUser->name }}</option>
                             @endif
-                            @foreach($otherUsersArr as $user)
+                            @foreach($otherUsers as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                             @endforeach
                         </select>
@@ -281,7 +271,7 @@
         if (window.TomSelect) {
             new TomSelect('#user_id_select', {
                 create: false,
-                sortField: null, // Benar-benar matikan sorting, urutan sesuai Blade
+                sortField: 'text',
                 placeholder: 'Cari nama user...'
             });
         }
