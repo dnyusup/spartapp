@@ -246,13 +246,23 @@
                             <option value="">Pilih user...</option>
                             @php
                                 $currentUserId = auth()->id();
-                                $currentUser = $users->firstWhere('id', $currentUserId);
-                                $otherUsers = $users->filter(fn($u) => $u->id !== $currentUserId)->sortBy('name');
+                                $currentUser = null;
+                                $otherUsersArr = [];
+                                foreach ($users as $u) {
+                                    if ($u->id == $currentUserId) {
+                                        $currentUser = $u;
+                                    } else {
+                                        $otherUsersArr[] = $u;
+                                    }
+                                }
+                                usort($otherUsersArr, function($a, $b) {
+                                    return strcmp($a->name, $b->name);
+                                });
                             @endphp
                             @if($currentUser)
                                 <option value="{{ $currentUser->id }}" {{ old('user_id') == $currentUser->id ? 'selected' : '' }}>{{ $currentUser->name }}</option>
                             @endif
-                            @foreach($otherUsers as $user)
+                            @foreach($otherUsersArr as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                             @endforeach
                         </select>
