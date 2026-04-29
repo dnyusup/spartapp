@@ -263,15 +263,13 @@
                     </div>
 </div>
 
-<!-- TomSelect for user dropdown -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<!-- TomSelect for user dropdown (bundled via Vite) -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (window.TomSelect) {
             new TomSelect('#user_id_select', {
                 create: false,
-                sortField: 'text',
+                sortField: null, // Keep Blade order
                 placeholder: 'Cari nama user...'
             });
         }
