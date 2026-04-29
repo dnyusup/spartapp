@@ -191,14 +191,12 @@ class StockTransactionController extends Controller
             }
             $oldSparepart->save();
 
-            // Calculate new stock for new sparepart
+            // Calculate new stock for new sparepart (allow negative stock for 'out', same as store)
             $stockBefore = $newSparepart->stock;
             if ($validated['type'] === 'in') {
                 $stockAfter = $stockBefore + $validated['quantity'];
             } elseif ($validated['type'] === 'out') {
-                if ($validated['quantity'] > $stockBefore) {
-                    throw new \Exception('Quantity exceeds available stock.');
-                }
+                // Allow stock to go negative
                 $stockAfter = $stockBefore - $validated['quantity'];
             } else {
                 $stockAfter = $validated['quantity'];
