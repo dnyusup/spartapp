@@ -177,7 +177,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex items-center gap-2">
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']))
+                                    @php
+                                        $isOwner = Auth::id() === $transaction->user_id;
+                                        $isAdmin = Auth::user()->role === 'admin';
+                                        $canEditOrCancel = !$transaction->status || !in_array($transaction->status, ['confirmed', 'canceled']);
+                                    @endphp
+                                    {{-- Edit button: only admin or owner can edit if not confirmed/canceled --}}
+                                    @if($canEditOrCancel && ($isAdmin || $isOwner))
                                         <a href="{{ route('transactions.edit', $transaction) }}" class="text-blue-600 hover:text-blue-800" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -186,14 +192,16 @@
                                             <i class="fas fa-edit"></i>
                                         </span>
                                     @endif
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']) && Auth::user()->role === 'admin')
+                                    {{-- Confirm button: only admin can confirm --}}
+                                    @if($canEditOrCancel && $isAdmin)
                                         <button type="button" 
                                                 onclick="confirmTransaction({{ $transaction->id }}, '{{ $transaction->sparepart->material_code ?? '' }}')"
                                                 class="text-green-600 hover:text-green-800" title="Confirm">
                                             <i class="fas fa-check-circle"></i>
                                         </button>
                                     @endif
-                                    @if(!in_array($transaction->status, ['confirmed', 'canceled']))
+                                    {{-- Cancel button: only admin or owner can cancel if not confirmed/canceled --}}
+                                    @if($canEditOrCancel && ($isAdmin || $isOwner))
                                         <button type="button" 
                                                 onclick="cancelTransaction({{ $transaction->id }}, '{{ $transaction->sparepart->material_code ?? '' }}')"
                                                 class="text-red-600 hover:text-red-800" title="Cancel">
