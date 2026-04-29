@@ -250,7 +250,7 @@
                                 $otherUsers = $users->filter(fn($u) => $u->id !== $currentUserId);
                             @endphp
                             @if($currentUser)
-                                <option value="{{ $currentUser->id }}" {{ old('user_id', $currentUser->id) == $currentUser->id ? 'selected' : '' }}>{{ $currentUser->name }} (You)</option>
+                                <option value="{{ $currentUser->id }}" {{ old('user_id') == $currentUser->id ? 'selected' : '' }}>{{ $currentUser->name }}</option>
                             @endif
                             @foreach($otherUsers as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
