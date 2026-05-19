@@ -122,40 +122,32 @@
                             Transaction Type <span class="text-red-500">*</span>
                         </label>
                         @if(auth()->user()->role === 'admin')
-                        <div class="grid grid-cols-3 gap-3">
-                            <label class="flex items-center justify-center p-4 border rounded-lg cursor-pointer transition hover:border-green-400
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="flex items-center justify-center gap-2 py-2 px-3 border rounded-lg cursor-pointer transition hover:border-green-400
                                           {{ old('type') == 'in' ? 'border-green-500 bg-green-50' : 'border-gray-300' }}">
                                 <input type="radio" name="type" value="in" class="sr-only" {{ old('type') == 'in' ? 'checked' : '' }} required>
-                                <div class="text-center">
-                                    <i class="fas fa-arrow-down text-green-500 text-xl mb-1"></i>
-                                    <p class="text-sm font-medium">In</p>
-                                </div>
+                                <i class="fas fa-arrow-down text-green-500"></i>
+                                <span class="text-sm font-medium">In</span>
                             </label>
-                            <label class="flex items-center justify-center p-4 border rounded-lg cursor-pointer transition hover:border-red-400
+                            <label class="flex items-center justify-center gap-2 py-2 px-3 border rounded-lg cursor-pointer transition hover:border-red-400
                                           {{ old('type', 'out') == 'out' ? 'border-red-500 bg-red-50' : 'border-gray-300' }}">
                                 <input type="radio" name="type" value="out" class="sr-only" {{ old('type', 'out') == 'out' ? 'checked' : '' }}>
-                                <div class="text-center">
-                                    <i class="fas fa-arrow-up text-red-500 text-xl mb-1"></i>
-                                    <p class="text-sm font-medium">Out</p>
-                                </div>
+                                <i class="fas fa-arrow-up text-red-500"></i>
+                                <span class="text-sm font-medium">Out</span>
                             </label>
-                            <label class="flex items-center justify-center p-4 border rounded-lg cursor-pointer transition hover:border-yellow-400
+                            <label class="flex items-center justify-center gap-2 py-2 px-3 border rounded-lg cursor-pointer transition hover:border-yellow-400
                                           {{ old('type') == 'adjustment' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-300' }}">
                                 <input type="radio" name="type" value="adjustment" class="sr-only" {{ old('type') == 'adjustment' ? 'checked' : '' }}>
-                                <div class="text-center">
-                                    <i class="fas fa-edit text-yellow-500 text-xl mb-1"></i>
-                                    <p class="text-sm font-medium">Adjust</p>
-                                </div>
+                                <i class="fas fa-edit text-yellow-500"></i>
+                                <span class="text-sm font-medium">Adjust</span>
                             </label>
                         </div>
                         @else
                         <div class="grid grid-cols-1">
-                            <label class="flex items-center justify-center p-4 border rounded-lg bg-red-50 border-red-500">
+                            <label class="flex items-center justify-center gap-2 py-2 px-3 border rounded-lg bg-red-50 border-red-500">
                                 <input type="radio" name="type" value="out" class="sr-only" checked>
-                                <div class="text-center">
-                                    <i class="fas fa-arrow-up text-red-500 text-xl mb-1"></i>
-                                    <p class="text-sm font-medium">Out</p>
-                                </div>
+                                <i class="fas fa-arrow-up text-red-500"></i>
+                                <span class="text-sm font-medium">Out</span>
                             </label>
                         </div>
                         @endif
