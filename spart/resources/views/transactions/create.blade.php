@@ -106,14 +106,17 @@
         .part-option.selected { background-color: #e0e7ff; }
     </style>
 
-    <script>
-        const sparepartsData = @json($spareparts->map(fn($sp) => [
+    @php
+        $sparepartsJson = $spareparts->map(fn($sp) => [
             'id'          => $sp->id,
             'code'        => $sp->material_code,
             'description' => $sp->description,
             'stock'       => (float) $sp->stock,
             'unit'        => $sp->unit,
-        ])->values());
+        ])->values();
+    @endphp
+    <script>
+        const sparepartsData = @json($sparepartsJson);
     </script>
 
     <div class="max-w-2xl mx-auto">
