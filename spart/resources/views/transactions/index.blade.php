@@ -33,13 +33,33 @@
                         </select>
                     </div>
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select name="status[]" id="status-filter" multiple>
-                            <option value="new" {{ in_array('new', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>New</option>
-                            <option value="changed" {{ in_array('changed', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Changed</option>
-                            <option value="confirmed" {{ in_array('confirmed', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Confirmed</option>
-                            <option value="canceled" {{ in_array('canceled', (request('status', $defaultStatuses ?? []))) ? 'selected' : '' }}>Canceled</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <div class="relative" id="status-dropdown-wrapper">
+                            <button type="button" id="status-dropdown-btn"
+                                    class="flex items-center justify-between w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-primary-500">
+                                <span id="status-btn-label" class="truncate">All Status</span>
+                                <i class="fas fa-chevron-down text-gray-400 ml-2 text-xs transition-transform duration-200" id="status-chevron"></i>
+                            </button>
+                            <div id="status-dropdown" class="hidden absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+                                @php $selectedStatuses = request('status', $defaultStatuses ?? []); @endphp
+                                <label class="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                                    <input type="checkbox" class="status-checkbox h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" name="status[]" value="new" {{ in_array('new', $selectedStatuses) ? 'checked' : '' }}>
+                                    <span class="flex items-center gap-1.5 text-sm text-gray-700"><span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>New</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                                    <input type="checkbox" class="status-checkbox h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" name="status[]" value="changed" {{ in_array('changed', $selectedStatuses) ? 'checked' : '' }}>
+                                    <span class="flex items-center gap-1.5 text-sm text-gray-700"><span class="w-2 h-2 rounded-full bg-yellow-500 shrink-0"></span>Changed</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                                    <input type="checkbox" class="status-checkbox h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" name="status[]" value="confirmed" {{ in_array('confirmed', $selectedStatuses) ? 'checked' : '' }}>
+                                    <span class="flex items-center gap-1.5 text-sm text-gray-700"><span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>Confirmed</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" class="status-checkbox h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" name="status[]" value="canceled" {{ in_array('canceled', $selectedStatuses) ? 'checked' : '' }}>
+                                    <span class="flex items-center gap-1.5 text-sm text-gray-700"><span class="w-2 h-2 rounded-full bg-red-400 shrink-0"></span>Canceled</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -62,15 +82,44 @@
             </form>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    if (window.TomSelect) {
-                        new TomSelect('#status-filter', {
-                            plugins: ['remove_button'],
-                            onChange: function() {
-                                document.getElementById('filterForm').submit();
-                            },
-                            placeholder: 'Select status...'
-                        });
+                    const btn       = document.getElementById('status-dropdown-btn');
+                    const dropdown  = document.getElementById('status-dropdown');
+                    const chevron   = document.getElementById('status-chevron');
+                    const checkboxes = document.querySelectorAll('.status-checkbox');
+                    const labels    = { new: 'New', changed: 'Changed', confirmed: 'Confirmed', canceled: 'Canceled' };
+
+                    function updateLabel() {
+                        const checked = [...checkboxes].filter(c => c.checked);
+                        const el = document.getElementById('status-btn-label');
+                        if (checked.length === 0 || checked.length === checkboxes.length) {
+                            el.textContent = 'All Status';
+                        } else if (checked.length <= 2) {
+                            el.textContent = checked.map(c => labels[c.value]).join(', ');
+                        } else {
+                            el.textContent = checked.length + ' selected';
+                        }
                     }
+
+                    btn.addEventListener('click', () => {
+                        dropdown.classList.toggle('hidden');
+                        chevron.classList.toggle('rotate-180');
+                    });
+
+                    document.addEventListener('click', e => {
+                        if (!e.target.closest('#status-dropdown-wrapper')) {
+                            dropdown.classList.add('hidden');
+                            chevron.classList.remove('rotate-180');
+                        }
+                    });
+
+                    checkboxes.forEach(cb => {
+                        cb.addEventListener('change', () => {
+                            updateLabel();
+                            document.getElementById('filterForm').submit();
+                        });
+                    });
+
+                    updateLabel();
                 });
             </script>
         </div>
