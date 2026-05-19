@@ -93,46 +93,44 @@ class StockTransactionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'sparepart_id' => 'required|exists:spareparts,id',
-            'type' => 'required|in:in,out,adjustment',
-            'quantity' => 'required|numeric|min:0.01',
-            'reference_no' => [
-                'required',
-                'numeric',
-                'digits_between:8,10',
-            ],
-            'user_id' => 'required|exists:users,id',
-            'notes' => 'nullable|string|max:1000',
+            'reference_no' => ['required', 'numeric', 'digits_between:8,10'],
+            'type'         => 'required|in:in,out,adjustment',
+            'user_id'      => 'required|exists:users,id',
+            'notes'        => 'nullable|string|max:1000',
+            'parts'                    => 'required|array|min:1',
+            'parts.*.sparepart_id'     => 'required|exists:spareparts,id',
+            'parts.*.quantity'         => 'required|numeric|min:0.01',
         ]);
 
-        $sparepart = Sparepart::findOrFail($validated['sparepart_id']);
-        $stockBefore = $sparepart->stock;
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['parts'] as $part) {
+                $sparepart   = Sparepart::findOrFail($part['sparepart_id']);
+                $stockBefore = $sparepart->stock;
 
-        // Calculate new stock
-        if ($validated['type'] === 'in') {
-            $stockAfter = $stockBefore + $validated['quantity'];
-        } elseif ($validated['type'] === 'out') {
-            // Allow stock to go negative
-            $stockAfter = $stockBefore - $validated['quantity'];
-        } else {
-            $stockAfter = $validated['quantity'];
-        }
+                if ($validated['type'] === 'in') {
+                    $stockAfter = $stockBefore + $part['quantity'];
+                } elseif ($validated['type'] === 'out') {
+                    $stockAfter = $stockBefore - $part['quantity'];
+                } else {
+                    // adjustment: new stock = entered quantity
+                    $stockAfter = $part['quantity'];
+                }
 
-        DB::transaction(function () use ($validated, $sparepart, $stockBefore, $stockAfter) {
-            StockTransaction::create([
-                'sparepart_id' => $validated['sparepart_id'],
-                'user_id' => $validated['user_id'],
-                'type' => $validated['type'],
-                'quantity' => $validated['quantity'],
-                'stock_before' => $stockBefore,
-                'stock_after' => $stockAfter,
-                'reference_no' => $validated['reference_no'],
-                'notes' => $validated['notes'],
-                'changed_by' => Auth::id(),
-                'changed_at' => now(),
-            ]);
+                StockTransaction::create([
+                    'sparepart_id' => $part['sparepart_id'],
+                    'user_id'      => $validated['user_id'],
+                    'type'         => $validated['type'],
+                    'quantity'     => $part['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after'  => $stockAfter,
+                    'reference_no' => $validated['reference_no'],
+                    'notes'        => $validated['notes'],
+                    'changed_by'   => Auth::id(),
+                    'changed_at'   => now(),
+                ]);
 
-            $sparepart->update(['stock' => $stockAfter]);
+                $sparepart->update(['stock' => $stockAfter]);
+            }
         });
 
         return redirect()->route('transactions.index')

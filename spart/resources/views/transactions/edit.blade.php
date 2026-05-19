@@ -2,9 +2,6 @@
     <x-slot:title>Edit Transaction</x-slot:title>
     <x-slot:header>Edit Stock Transaction</x-slot:header>
 
-    <!-- Include html5-qrcode library for barcode scanning -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    
     <style>
         /* Custom select dropdown styles */
         .custom-select-wrapper {
@@ -270,9 +267,7 @@
                     </div>
 </div>
 
-<!-- TomSelect for user dropdown -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+{{-- TomSelect loaded via Vite (app.js) --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (window.TomSelect) {
