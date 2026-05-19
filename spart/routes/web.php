@@ -33,16 +33,19 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Allow all authenticated users to view sparepart list and detail
+    // Allow all authenticated users to view sparepart list
     Route::get('spareparts', [SparepartController::class, 'index'])->name('spareparts.index');
-    Route::get('spareparts/{sparepart}', [SparepartController::class, 'show'])->name('spareparts.show');
 
     // Admin Only Routes
     Route::middleware('admin')->group(function () {
+        // Resource routes registered BEFORE the wildcard show route so /spareparts/create is matched correctly
         Route::resource('spareparts', SparepartController::class)->except(['index', 'show']);
         Route::get('spareparts-export', [SparepartController::class, 'exportExcel'])->name('spareparts.export');
         Route::post('spareparts-import', [SparepartController::class, 'importExcel'])->name('spareparts.import');
         Route::resource('categories', CategoryController::class);
         Route::resource('users', UserController::class);
     });
+
+    // Wildcard show route comes AFTER specific paths (create/edit/etc.) to avoid conflict
+    Route::get('spareparts/{sparepart}', [SparepartController::class, 'show'])->name('spareparts.show');
 });
