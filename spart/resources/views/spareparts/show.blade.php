@@ -40,7 +40,7 @@
                         <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $sparepart->category->name ?? '-' }}</dd>
                     </div>
                     <div class="{{ $sparepart->isLowStock() ? 'bg-red-50' : 'bg-green-50' }} rounded-lg p-4">
-                        <dt class="text-sm font-medium {{ $sparepart->isLowStock() ? 'text-red-600' : 'text-green-600' }}">Current Stock</dt>
+                        <dt class="text-sm font-medium {{ $sparepart->isLowStock() ? 'text-red-600' : 'text-green-600' }}">Current Qty</dt>
                         <dd class="mt-1 text-2xl font-bold {{ $sparepart->isLowStock() ? 'text-red-700' : 'text-green-700' }}">
                             {{ number_format($sparepart->stock, 0) }} {{ $sparepart->unit }}
                             @if($sparepart->isLowStock())
@@ -49,7 +49,7 @@
                         </dd>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
-                        <dt class="text-sm font-medium text-gray-500">Minimum Stock</dt>
+                        <dt class="text-sm font-medium text-gray-500">Min. Qty</dt>
                         <dd class="mt-1 text-lg font-semibold text-gray-900">{{ number_format($sparepart->min_stock, 0) }} {{ $sparepart->unit }}</dd>
                     </div>
                 </dl>
@@ -70,8 +70,8 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Stock Before</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Stock After</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Qty Before</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Qty After</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Notes</th>
                         </tr>
                     </thead>

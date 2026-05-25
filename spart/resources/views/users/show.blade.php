@@ -71,7 +71,7 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="p-6 border-b border-slate-200">
                 <h3 class="text-lg font-semibold text-slate-800">Recent Transactions</h3>
-                <p class="text-slate-500 text-sm mt-1">Stock transactions made by this user</p>
+                <p class="text-slate-500 text-sm mt-1">Transactions made by this user</p>
             </div>
             
             @if($user->stockTransactions->count() > 0)

@@ -1,6 +1,6 @@
 ﻿<x-layouts.app>
     <x-slot:title>New Transaction</x-slot:title>
-    <x-slot:header>New Stock Transaction</x-slot:header>
+    <x-slot:header>New Transaction</x-slot:header>
 
     <style>
         /* Compact part list row */
@@ -275,7 +275,7 @@
                 <!-- Stock & Satuan -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-blue-600 mb-1">Existing Stock</label>
+                        <label class="block text-xs font-medium text-blue-600 mb-1">Current Qty</label>
                         <input type="text" id="modal-stock" readonly
                                class="block w-full rounded-md border-gray-200 bg-blue-50 shadow-sm sm:text-sm px-3 py-2 border text-blue-700 font-semibold"
                                placeholder="--">

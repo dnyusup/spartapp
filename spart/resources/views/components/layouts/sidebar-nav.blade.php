@@ -65,7 +65,7 @@
                             <i class="fas fa-exchange-alt text-lg {{ request()->routeIs('transactions.*') ? 'text-blue-400' : '' }}"></i>
                         </span>
                         <span class="flex flex-col justify-center">
-                            <span>Stock Transactions</span>
+                            <span>Transactions</span>
                             <span class="text-[10px] text-slate-500 font-normal">In/Out movements</span>
                         </span>
                     </a>

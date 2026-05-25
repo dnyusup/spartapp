@@ -9,15 +9,15 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
                         @if($transaction->type === 'in')
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                <i class="fas fa-arrow-down mr-2"></i>Stock In
+                                <i class="fas fa-arrow-down mr-2"></i>In
                             </span>
                         @elseif($transaction->type === 'out')
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                                <i class="fas fa-arrow-up mr-2"></i>Stock Out
+                                <i class="fas fa-arrow-up mr-2"></i>Out
                             </span>
                         @else
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                <i class="fas fa-edit mr-2"></i>Stock Adjustment
+                                <i class="fas fa-edit mr-2"></i>Adjustment
                             </span>
                         @endif
                     </h3>
@@ -44,7 +44,7 @@
                     </div>
                     
                     <div class="bg-gray-50 rounded-lg p-4">
-                        <dt class="text-sm font-medium text-gray-500">Stock Change</dt>
+                        <dt class="text-sm font-medium text-gray-500">Qty Change</dt>
                         <dd class="mt-1 text-lg font-semibold text-gray-900">
                             {{ number_format($transaction->stock_before, 0) }} 
                             <i class="fas fa-arrow-right text-gray-400 mx-2"></i>

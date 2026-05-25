@@ -46,7 +46,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Initial Stock *</label>
+                            <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Initial Qty *</label>
                             <input type="number" name="stock" id="stock" value="{{ old('stock', 0) }}" required min="0" step="0.01"
                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border @error('stock') border-red-500 @enderror">
                             @error('stock')
@@ -62,7 +62,7 @@
                         </div>
                         
                         <div>
-                            <label for="min_stock" class="block text-sm font-medium text-gray-700 mb-1">Minimum Stock</label>
+                            <label for="min_stock" class="block text-sm font-medium text-gray-700 mb-1">Min. Qty</label>
                             <input type="number" name="min_stock" id="min_stock" value="{{ old('min_stock', 0) }}" min="0" step="0.01"
                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
                         </div>

@@ -24,7 +24,7 @@
                 </a>
                 <a href="{{ route('spareparts.index', ['low_stock' => 1]) }}" class="flex flex-col items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">
                     <i class="fas fa-exclamation-triangle text-red-600 text-2xl mb-2"></i>
-                    <span class="text-sm font-medium text-red-700">Check Low Stock</span>
+                    <span class="text-sm font-medium text-red-700">Check Low Qty</span>
                 </a>
             @else
                 <a href="{{ route('transactions.create') }}" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
@@ -69,7 +69,7 @@
                 <div class="absolute rounded-md bg-red-500 p-3">
                     <i class="fas fa-exclamation-triangle text-white text-xl"></i>
                 </div>
-                <p class="ml-16 truncate text-sm font-medium text-gray-500">Low Stock</p>
+                <p class="ml-16 truncate text-sm font-medium text-gray-500">Low Qty</p>
             </dt>
             <dd class="ml-16 flex items-baseline">
                 <p class="text-2xl font-semibold text-gray-900">{{ number_format($lowStockCount) }}</p>
@@ -88,14 +88,14 @@
             <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
                     <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
-                    Low Stock Items
+                    Low Qty Items
                 </h3>
             </div>
             <div class="px-4 py-5 sm:p-6">
                 @if($lowStockItems->isEmpty())
                     <p class="text-gray-500 text-center py-4">
                         <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i><br>
-                        No low stock items
+                        No low qty items
                     </p>
                 @else
                     <ul class="divide-y divide-gray-200">

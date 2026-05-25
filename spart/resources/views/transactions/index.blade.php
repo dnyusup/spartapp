@@ -1,6 +1,6 @@
 <x-layouts.app>
-    <x-slot:title>Stock Transactions</x-slot:title>
-    <x-slot:header>Stock Transaction History</x-slot:header>
+    <x-slot:title>Transactions</x-slot:title>
+    <x-slot:header>Transaction History</x-slot:header>
 
     <!-- Search & Filter -->
     <div class="bg-white shadow rounded-lg mb-6">
@@ -150,7 +150,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Material</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Stock</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Qty</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Order No.</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">Remark</th>
@@ -331,7 +331,7 @@
                 </p>
                 <p class="text-sm text-red-600 mt-3">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Stock will be reverted to the previous state. This action cannot be undone.
+                    Quantity will be reverted to the previous state. This action cannot be undone.
                 </p>
             </div>
             <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3 rounded-b-lg">

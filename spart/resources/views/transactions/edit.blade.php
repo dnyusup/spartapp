@@ -1,6 +1,6 @@
 <x-layouts.app>
     <x-slot:title>Edit Transaction</x-slot:title>
-    <x-slot:header>Edit Stock Transaction</x-slot:header>
+    <x-slot:header>Edit Transaction</x-slot:header>
 
     <style>
         /* Custom select dropdown styles */
@@ -160,7 +160,7 @@
 
                     <!-- Existing Stock (Auto-fill) -->
                     <div>
-                        <label class="block text-sm font-medium text-blue-600 mb-1">Existing Stock</label>
+                        <label class="block text-sm font-medium text-blue-600 mb-1">Current Qty</label>
                         <div class="flex items-center gap-2">
                             <input type="text" id="existing_stock" readonly
                                    class="block w-full rounded-md border-gray-200 bg-blue-50 shadow-sm sm:text-sm px-3 py-2 border text-blue-700 font-semibold"

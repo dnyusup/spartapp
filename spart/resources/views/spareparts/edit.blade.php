@@ -49,7 +49,7 @@
                         </div>
                         
                         <div>
-                            <label for="min_stock" class="block text-sm font-medium text-gray-700 mb-1">Minimum Stock</label>
+                            <label for="min_stock" class="block text-sm font-medium text-gray-700 mb-1">Min. Qty</label>
                             <input type="number" name="min_stock" id="min_stock" value="{{ old('min_stock', $sparepart->min_stock) }}" min="0" step="0.01"
                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border">
                         </div>
@@ -71,9 +71,9 @@
                     <div class="bg-gray-50 rounded-md p-4">
                         <p class="text-sm text-gray-600">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Current Stock: <strong>{{ number_format($sparepart->stock, 0) }} {{ $sparepart->unit }}</strong>
+                            Current Qty: <strong>{{ number_format($sparepart->stock, 0) }} {{ $sparepart->unit }}</strong>
                             <br>
-                            <span class="text-xs">To change stock, use the <a href="{{ route('transactions.create', ['sparepart_id' => $sparepart->id]) }}" class="text-primary-600 hover:underline">Stock Transaction</a> menu</span>
+                            <span class="text-xs">To change quantity, use the <a href="{{ route('transactions.create', ['sparepart_id' => $sparepart->id]) }}" class="text-primary-600 hover:underline">Transaction</a> menu</span>
                         </p>
                     </div>
                 </div>
