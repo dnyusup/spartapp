@@ -341,9 +341,10 @@
     @endif
 
     <script>
-        let partCounter   = 0;
-        let html5QrCode   = null;
-        let modalPartData = null;
+        let partCounter       = 0;
+        let html5QrCode       = null;
+        let modalPartData     = null;
+        let addedSparepartIds = new Set();
 
         function escHtml(str) {
             return String(str)
@@ -371,9 +372,9 @@
         function renderModalDropdown(query) {
             const dropdown = document.getElementById('modal-dropdown');
             const q = query.toLowerCase();
-            const filtered = q
+            const filtered = (q
                 ? sparepartsData.filter(sp => sp.code.toLowerCase().includes(q) || sp.description.toLowerCase().includes(q))
-                : sparepartsData;
+                : sparepartsData).filter(sp => !addedSparepartIds.has(String(sp.id)));
             if (filtered.length === 0) {
                 dropdown.innerHTML = '<div class="px-3 py-2 text-sm text-gray-400">Tidak ada hasil</div>';
             } else {
@@ -420,6 +421,10 @@
                 document.getElementById('modal-barcode-search').focus();
                 return;
             }
+            if (addedSparepartIds.has(String(sparepartId))) {
+                alert('Part ini sudah ada di daftar. Hapus dulu jika ingin mengubahnya.');
+                return;
+            }
             if (!qty || qty <= 0) {
                 alert('Masukkan jumlah yang valid (> 0).');
                 document.getElementById('modal-quantity').focus();
@@ -431,6 +436,7 @@
 
         function addCompactRow(sparepartId, qty, data) {
             const idx = partCounter++;
+            addedSparepartIds.add(String(sparepartId));
             document.getElementById('parts-empty-msg').classList.add('hidden');
             const container = document.getElementById('parts-container');
             const row = document.createElement('div');
@@ -456,6 +462,7 @@
                     </button>
                 </div>`;
             row.querySelector('.remove-part-btn').addEventListener('click', () => {
+                addedSparepartIds.delete(String(sparepartId));
                 row.remove();
                 refreshUI();
             });
@@ -491,10 +498,14 @@
                     stopScanner();
                     document.getElementById('scanner_modal').classList.add('hidden');
                     if (match) {
-                        const fakeOpt = {
-                            dataset: { id: String(match.id), code: match.code, desc: match.description, stock: String(match.stock), unit: match.unit }
-                        };
-                        selectModalPart(fakeOpt);
+                        if (addedSparepartIds.has(String(match.id))) {
+                            alert('Part "' + match.code + '" sudah ada di daftar.');
+                        } else {
+                            const fakeOpt = {
+                                dataset: { id: String(match.id), code: match.code, desc: match.description, stock: String(match.stock), unit: match.unit }
+                            };
+                            selectModalPart(fakeOpt);
+                        }
                     } else {
                         alert('Barcode tidak ditemukan: ' + decodedText);
                     }
@@ -543,6 +554,18 @@
 
             document.getElementById('modal-quantity').addEventListener('keydown', e => {
                 if (e.key === 'Enter') { e.preventDefault(); confirmAddPart(); }
+            });
+
+            // Prevent double submit
+            document.getElementById('transaction-form').addEventListener('submit', function (e) {
+                const btn = this.querySelector('button[type="submit"]');
+                if (btn.dataset.submitting === 'true') {
+                    e.preventDefault();
+                    return;
+                }
+                btn.dataset.submitting = 'true';
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
             });
         });
 
