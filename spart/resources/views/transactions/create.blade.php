@@ -528,8 +528,16 @@
             document.getElementById('confirm-add-part').addEventListener('click', confirmAddPart);
 
             const barcodeSearch = document.getElementById('modal-barcode-search');
-            barcodeSearch.addEventListener('focus', () => renderModalDropdown(barcodeSearch.value));
-            barcodeSearch.addEventListener('input', () => renderModalDropdown(barcodeSearch.value));
+            barcodeSearch.addEventListener('focus', () => {
+                if (barcodeSearch.value.trim() !== '') renderModalDropdown(barcodeSearch.value);
+            });
+            barcodeSearch.addEventListener('input', () => {
+                if (barcodeSearch.value.trim() !== '') {
+                    renderModalDropdown(barcodeSearch.value);
+                } else {
+                    document.getElementById('modal-dropdown').classList.remove('show');
+                }
+            });
 
             document.addEventListener('click', e => {
                 if (!e.target.closest('#modal-barcode-search') && !e.target.closest('#modal-dropdown')) {
