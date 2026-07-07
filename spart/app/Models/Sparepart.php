@@ -36,6 +36,11 @@ class Sparepart extends Model
 
     public function isLowStock(): bool
     {
-        return $this->stock <= $this->min_stock;
+        // Tidak dianggap low stock jika min_stock 0 atau null
+        if (!$this->min_stock || $this->min_stock == 0) {
+            return false;
+        }
+        
+        return $this->stock < $this->min_stock;
     }
 }
