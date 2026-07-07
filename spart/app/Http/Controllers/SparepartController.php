@@ -28,7 +28,7 @@ class SparepartController extends Controller
         }
 
         if ($request->low_stock) {
-            $query->whereColumn('stock', '<=', 'min_stock');
+            $query->whereColumn('stock', '<', 'min_stock');
         }
 
         $spareparts = $query->orderBy('material_code')->paginate(15)->withQueryString();
