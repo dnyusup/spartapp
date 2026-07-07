@@ -13,12 +13,17 @@ class DashboardController extends Controller
     {
         $totalSpareparts = Sparepart::count();
         $totalCategories = Category::count();
-        $lowStockCount = Sparepart::whereColumn('stock', '<=', 'min_stock')->count();
+        $lowStockCount = Sparepart::whereColumn('stock', '<', 'min_stock')
+            ->where('min_stock', '>', 0)
+            ->whereNotNull('min_stock')
+            ->count();
         $recentTransactions = StockTransaction::with(['sparepart', 'user'])
             ->latest()
             ->take(10)
             ->get();
-        $lowStockItems = Sparepart::whereColumn('stock', '<=', 'min_stock')
+        $lowStockItems = Sparepart::whereColumn('stock', '<', 'min_stock')
+            ->where('min_stock', '>', 0)
+            ->whereNotNull('min_stock')
             ->orderBy('stock')
             ->take(5)
             ->get();
