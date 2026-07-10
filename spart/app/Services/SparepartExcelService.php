@@ -31,7 +31,7 @@ class SparepartExcelService
         $sheet->setTitle('Spareparts');
 
         // Define headers
-        $headers = ['Material Code', 'Bin Location', 'Old Material No', 'Description', 'Stock', 'Unit', 'Min Stock', 'Category'];
+        $headers = ['Material Code', 'Bin Location', 'Old Material No', 'Description', 'Stock', 'Unit', 'Min Stock', 'Category', 'Replace Required'];
         
         // Set headers using fromArray (faster)
         $sheet->fromArray($headers, null, 'A1');
@@ -57,7 +57,7 @@ class SparepartExcelService
                 'vertical' => Alignment::VERTICAL_CENTER,
             ],
         ];
-        $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:I1')->applyFromArray($headerStyle);
 
         // Set column widths
         $sheet->getColumnDimension('A')->setWidth(20);
@@ -68,6 +68,7 @@ class SparepartExcelService
         $sheet->getColumnDimension('F')->setWidth(10);
         $sheet->getColumnDimension('G')->setWidth(12);
         $sheet->getColumnDimension('H')->setWidth(20);
+        $sheet->getColumnDimension('I')->setWidth(18);
 
         // Get categories for lookup
         $categories = Category::pluck('name', 'id')->toArray();
@@ -88,6 +89,7 @@ class SparepartExcelService
                         $sparepart->unit,
                         $sparepart->min_stock,
                         $sparepart->category?->name ?? '',
+                        $sparepart->replace_required ? 'Yes' : '',
                     ];
                 }
                 // Use fromArray for bulk insert (much faster)
@@ -150,13 +152,15 @@ class SparepartExcelService
             ['Unit - Unit of measurement (e.g., PCS, SET, MTR)'],
             ['Min Stock - Minimum stock level for alerts'],
             ['Category - Select from dropdown (see Categories sheet)'],
+            ['Replace Required - "Yes" if replacement required, blank or empty = No'],
             [''],
             ['Instructions:'],
             ['1. Edit existing data or add new rows below existing data'],
             ['2. Material Code must be unique - duplicates will update existing records'],
-            ['3. Use the Category dropdown to select valid categories'],
-            ['4. Stock and Min Stock should be numbers'],
-            ['5. Save the file and upload it back to the application'],
+            ['3. Replace Required: Type "Yes" for required, leave blank for not required'],
+            ['4. Use the Category dropdown to select valid categories'],
+            ['5. Stock and Min Stock should be numbers'],
+            ['6. Save the file and upload it back to the application'],
             [''],
             ['Note: Do not modify the header row or column order'],
         ];
@@ -167,7 +171,7 @@ class SparepartExcelService
         
         $instructionSheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $instructionSheet->getStyle('A3')->getFont()->setBold(true);
-        $instructionSheet->getStyle('A13')->getFont()->setBold(true);
+        $instructionSheet->getStyle('A15')->getFont()->setBold(true);
         $instructionSheet->getColumnDimension('A')->setWidth(70);
 
         // Set active sheet back to Spareparts
@@ -223,6 +227,7 @@ class SparepartExcelService
                 $unit = trim((string) $sheet->getCell("F{$row}")->getValue());
                 $minStock = $sheet->getCell("G{$row}")->getValue();
                 $categoryName = trim((string) $sheet->getCell("H{$row}")->getValue());
+                $replaceRequired = trim((string) $sheet->getCell("I{$row}")->getValue());
 
                 // Validate required fields
                 if (empty($description)) {
@@ -242,6 +247,13 @@ class SparepartExcelService
                     }
                 }
 
+                // Parse replace_required - blank/empty = false, accepts Yes/No, True/False, 1/0
+                $replaceRequiredValue = false;
+                if (!empty($replaceRequired)) {
+                    $replaceRequiredLower = strtolower($replaceRequired);
+                    $replaceRequiredValue = in_array($replaceRequiredLower, ['yes', 'true', '1', 'y']);
+                }
+
                 // Prepare data
                 $data = [
                     'material_code' => $materialCode,
@@ -252,6 +264,7 @@ class SparepartExcelService
                     'unit' => $unit ?: 'PCS',
                     'min_stock' => is_numeric($minStock) ? (float) $minStock : 0,
                     'category_id' => $categoryId,
+                    'replace_required' => $replaceRequiredValue,
                 ];
 
                 // Check if exists using array lookup (much faster than DB query)

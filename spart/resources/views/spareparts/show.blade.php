@@ -28,6 +28,20 @@
                         <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $sparepart->material_code }}</dd>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
+                        <dt class="text-sm font-medium text-gray-500">Replace Required</dt>
+                        <dd class="mt-1 text-lg font-semibold">
+                            @if($sparepart->replace_required)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <i class="fas fa-check-circle mr-1"></i>Yes
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    <i class="fas fa-times-circle mr-1"></i>No
+                                </span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
                         <dt class="text-sm font-medium text-gray-500">Bin Location</dt>
                         <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $sparepart->bin_location ?: '-' }}</dd>
                     </div>

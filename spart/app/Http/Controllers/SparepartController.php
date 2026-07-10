@@ -47,6 +47,7 @@ class SparepartController extends Controller
     {
         $validated = $request->validate([
             'material_code' => 'required|string|max:255|unique:spareparts',
+            'replace_required' => 'nullable|boolean',
             'bin_location' => 'nullable|string|max:255',
             'old_material_no' => 'nullable|string|max:255',
             'description' => 'required|string|max:255',
@@ -55,6 +56,8 @@ class SparepartController extends Controller
             'min_stock' => 'nullable|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
         ]);
+
+        $validated['replace_required'] = $request->has('replace_required');
 
         Sparepart::create($validated);
 
@@ -78,6 +81,7 @@ class SparepartController extends Controller
     {
         $validated = $request->validate([
             'material_code' => 'required|string|max:255|unique:spareparts,material_code,' . $sparepart->id,
+            'replace_required' => 'nullable|boolean',
             'bin_location' => 'nullable|string|max:255',
             'old_material_no' => 'nullable|string|max:255',
             'description' => 'required|string|max:255',
@@ -85,6 +89,8 @@ class SparepartController extends Controller
             'min_stock' => 'nullable|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
         ]);
+
+        $validated['replace_required'] = $request->has('replace_required');
 
         $sparepart->update($validated);
 

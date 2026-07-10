@@ -10,6 +10,7 @@ class Sparepart extends Model
 {
     protected $fillable = [
         'material_code',
+        'replace_required',
         'bin_location',
         'old_material_no',
         'description',
@@ -22,6 +23,7 @@ class Sparepart extends Model
     protected $casts = [
         'stock' => 'decimal:2',
         'min_stock' => 'decimal:2',
+        'replace_required' => 'boolean',
     ];
 
     public function category(): BelongsTo

@@ -28,6 +28,15 @@
                     </div>
 
                     <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="replace_required" id="replace_required" value="1" {{ old('replace_required') ? 'checked' : '' }}
+                                   class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Replace Required</span>
+                        </label>
+                        <p class="mt-1 text-xs text-gray-500">Check this if the sparepart requires replacement</p>
+                    </div>
+
+                    <div>
                         <label for="old_material_no" class="block text-sm font-medium text-gray-700 mb-1">Old Material No.</label>
                         <input type="text" name="old_material_no" id="old_material_no" value="{{ old('old_material_no') }}"
                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm px-3 py-2 border"

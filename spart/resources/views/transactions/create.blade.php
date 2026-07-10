@@ -73,11 +73,12 @@
 
     @php
         $sparepartsJson = $spareparts->map(fn($sp) => [
-            'id'          => $sp->id,
-            'code'        => $sp->material_code,
-            'description' => $sp->description,
-            'stock'       => (float) $sp->stock,
-            'unit'        => $sp->unit,
+            'id'               => $sp->id,
+            'code'             => $sp->material_code,
+            'description'      => $sp->description,
+            'stock'            => (float) $sp->stock,
+            'unit'             => $sp->unit,
+            'replace_required' => (bool) $sp->replace_required,
         ])->values();
     @endphp
     <script>
@@ -287,6 +288,13 @@
                                placeholder="PC">
                     </div>
                 </div>
+                <!-- Replace Required Warning -->
+                <div id="modal-replace-warning" class="hidden p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 mt-0.5"></i>
+                        <p class="text-xs text-yellow-800 font-medium">Pengambilan Part ini wajib ditukar dengan part lama nya</p>
+                    </div>
+                </div>
                 <!-- Quantity -->
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">
@@ -360,6 +368,7 @@
             document.getElementById('modal-satuan').value         = '';
             document.getElementById('modal-quantity').value       = '';
             document.getElementById('modal-dropdown').classList.remove('show');
+            document.getElementById('modal-replace-warning').classList.add('hidden');
             modalPartData = null;
             document.getElementById('add-part-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('modal-barcode-search').focus(), 100);
@@ -384,7 +393,8 @@
                           data-code="${escHtml(sp.code)}"
                           data-desc="${escHtml(sp.description)}"
                           data-stock="${sp.stock}"
-                          data-unit="${escHtml(sp.unit)}">
+                          data-unit="${escHtml(sp.unit)}"
+                          data-replace="${sp.replace_required}">
                         <strong>${escHtml(sp.code)}</strong> &ndash; ${escHtml(sp.description.substring(0, 45))}
                         <span class="text-xs text-gray-400 ml-1">(${Number(sp.stock).toLocaleString('id-ID')} ${escHtml(sp.unit)})</span>
                     </div>`
@@ -398,11 +408,12 @@
 
         function selectModalPart(opt) {
             modalPartData = {
-                id:          opt.dataset.id,
-                code:        opt.dataset.code,
-                description: opt.dataset.desc,
-                stock:       opt.dataset.stock,
-                unit:        opt.dataset.unit,
+                id:               opt.dataset.id,
+                code:             opt.dataset.code,
+                description:      opt.dataset.desc,
+                stock:            opt.dataset.stock,
+                unit:             opt.dataset.unit,
+                replace_required: opt.dataset.replace === 'true',
             };
             document.getElementById('modal-sparepart-id').value   = opt.dataset.id;
             document.getElementById('modal-barcode-search').value  = opt.dataset.code;
@@ -410,6 +421,16 @@
             document.getElementById('modal-stock').value           = Number(opt.dataset.stock).toLocaleString('id-ID') + ' ' + opt.dataset.unit;
             document.getElementById('modal-satuan').value          = opt.dataset.unit;
             document.getElementById('modal-dropdown').classList.remove('show');
+            
+            // Show/hide replace required warning based on transaction type and part's replace_required
+            const transactionType = document.querySelector('input[name="type"]:checked')?.value;
+            const replaceWarning = document.getElementById('modal-replace-warning');
+            if (transactionType === 'out' && modalPartData.replace_required) {
+                replaceWarning.classList.remove('hidden');
+            } else {
+                replaceWarning.classList.add('hidden');
+            }
+            
             document.getElementById('modal-quantity').focus();
         }
 
@@ -430,6 +451,15 @@
                 document.getElementById('modal-quantity').focus();
                 return;
             }
+            
+            // Show confirmation for replace required parts on OUT transaction
+            const transactionType = document.querySelector('input[name="type"]:checked')?.value;
+            if (transactionType === 'out' && modalPartData.replace_required) {
+                if (!confirm('Anda mengambil part yang wajib ditukar dengan part lama, Silahkan tukar dan konfirmasi kepada Store Keeper')) {
+                    return;
+                }
+            }
+            
             addCompactRow(sparepartId, qty, modalPartData);
             closePartModal();
         }
@@ -502,7 +532,14 @@
                             alert('Part "' + match.code + '" sudah ada di daftar.');
                         } else {
                             const fakeOpt = {
-                                dataset: { id: String(match.id), code: match.code, desc: match.description, stock: String(match.stock), unit: match.unit }
+                                dataset: { 
+                                    id: String(match.id), 
+                                    code: match.code, 
+                                    desc: match.description, 
+                                    stock: String(match.stock), 
+                                    unit: match.unit,
+                                    replace: String(match.replace_required)
+                                }
                             };
                             selectModalPart(fakeOpt);
                         }
@@ -593,6 +630,16 @@
                 if (this.value === 'in')           lbl.classList.add('border-green-500','bg-green-50');
                 else if (this.value === 'out')     lbl.classList.add('border-red-500','bg-red-50');
                 else                               lbl.classList.add('border-yellow-500','bg-yellow-50');
+                
+                // Update replace warning visibility when transaction type changes
+                if (modalPartData) {
+                    const replaceWarning = document.getElementById('modal-replace-warning');
+                    if (this.value === 'out' && modalPartData.replace_required) {
+                        replaceWarning.classList.remove('hidden');
+                    } else {
+                        replaceWarning.classList.add('hidden');
+                    }
+                }
             });
         });
     </script>
