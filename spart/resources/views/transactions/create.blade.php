@@ -332,7 +332,7 @@
             <div class="p-4">
                 <div id="scanner_reader" style="width: 100%;"></div>
                 <p class="text-sm text-gray-500 mt-3 text-center">
-                    <i class="fas fa-info-circle mr-1"></i> Arahkan kamera ke barcode atau QR code
+                    <i class="fas fa-info-circle mr-1"></i> Arahkan kamera <strong>lurus & datar</strong> ke barcode &mdash; hindari posisi miring
                 </p>
             </div>
         </div>
@@ -518,11 +518,22 @@
         }
 
         function startScanner() {
+            let lastScanText  = '';
+            let lastScanCount = 0;
+
             html5QrCode = new Html5Qrcode('scanner_reader');
             html5QrCode.start(
                 { facingMode: 'environment' },
-                { fps: 10, qrbox: { width: 250, height: 250 } },
+                {
+                    fps: 15,
+                    qrbox: { width: 300, height: 120 },
+                    experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+                },
                 decodedText => {
+                    // Require 2 identical consecutive reads to avoid angle-induced misreads
+                    if (decodedText === lastScanText) { lastScanCount++; } else { lastScanText = decodedText; lastScanCount = 1; }
+                    if (lastScanCount < 2) return;
+
                     const match = sparepartsData.find(sp => sp.code === decodedText)
                                || sparepartsData.find(sp => sp.code.includes(decodedText) || decodedText.includes(sp.code));
                     stopScanner();
