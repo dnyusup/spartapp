@@ -53,7 +53,7 @@
         <div class="flex flex-wrap items-center gap-2">
             @if(auth()->user()->isAdmin())
                 <!-- Export Excel Button -->
-                <a href="{{ route('spareparts.export') }}" 
+                <a href="{{ route('spareparts.export', array_filter(['search' => request('search'), 'category' => request('category'), 'low_stock' => request('low_stock')])) }}" 
                    class="inline-flex items-center px-4 py-2 border border-emerald-300 text-sm font-medium rounded-md shadow-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-colors">
                     <i class="fas fa-file-excel mr-2"></i>Export Excel
                 </a>

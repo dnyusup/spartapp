@@ -18,7 +18,7 @@ class SparepartExcelService
     /**
      * Export spareparts to Excel template with existing data
      */
-    public function exportTemplate(): Spreadsheet
+    public function exportTemplate(array $filters = []): Spreadsheet
     {
         // Increase execution time and memory for large exports
         set_time_limit(300); // 5 minutes
@@ -75,9 +75,23 @@ class SparepartExcelService
 
         // Process spareparts in chunks for memory efficiency
         $row = 2;
-        Sparepart::with('category')
-            ->orderBy('material_code')
-            ->chunk(1000, function ($spareparts) use ($sheet, &$row) {
+        $query = Sparepart::with('category')->orderBy('material_code');
+        if (!empty($filters['search'])) {
+            $s = $filters['search'];
+            $query->where(function ($q) use ($s) {
+                $q->where('material_code', 'like', "%{$s}%")
+                  ->orWhere('description', 'like', "%{$s}%")
+                  ->orWhere('bin_location', 'like', "%{$s}%")
+                  ->orWhere('old_material_no', 'like', "%{$s}%");
+            });
+        }
+        if (!empty($filters['category'])) {
+            $query->where('category_id', $filters['category']);
+        }
+        if (!empty($filters['low_stock'])) {
+            $query->whereColumn('stock', '<', 'min_stock');
+        }
+        $query->chunk(1000, function ($spareparts) use ($sheet, &$row) {
                 $data = [];
                 foreach ($spareparts as $sparepart) {
                     $data[] = [

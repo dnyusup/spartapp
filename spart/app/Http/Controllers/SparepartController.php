@@ -109,9 +109,10 @@ class SparepartController extends Controller
     /**
      * Export spareparts to Excel template
      */
-    public function exportExcel(SparepartExcelService $excelService)
+    public function exportExcel(Request $request, SparepartExcelService $excelService)
     {
-        $spreadsheet = $excelService->exportTemplate();
+        $filters = $request->only(['search', 'category', 'low_stock']);
+        $spreadsheet = $excelService->exportTemplate($filters);
         $filename = 'spareparts_' . date('Y-m-d_His') . '.xlsx';
         $excelService->download($spreadsheet, $filename);
     }
