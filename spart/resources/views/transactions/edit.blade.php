@@ -141,10 +141,36 @@
                                 </button>
                             </div>
                             <div class="p-4">
-                                <div id="scanner_reader" style="width: 100%;"></div>
-                                <p class="text-sm text-gray-500 mt-3 text-center">
-                                    <i class="fas fa-info-circle mr-1"></i> Arahkan kamera <strong>lurus &amp; datar</strong> ke barcode &mdash; hindari posisi miring
-                                </p>
+                                <div id="scanner_view">
+                                    <div id="scanner_reader" style="width: 100%;"></div>
+                                    <p class="text-sm text-gray-500 mt-3 text-center">
+                                        <i class="fas fa-info-circle mr-1"></i> Arahkan kamera <strong>lurus &amp; datar</strong> ke barcode &mdash; hindari posisi miring
+                                    </p>
+                                </div>
+                                <div id="scanner_confirm" class="hidden">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-barcode text-4xl text-gray-400 mb-2 block"></i>
+                                        <p class="text-xs text-gray-500 mb-1">Barcode terbaca:</p>
+                                        <p id="scanner_confirm_code" class="text-2xl font-bold text-gray-800 font-mono tracking-widest"></p>
+                                    </div>
+                                    <div id="scanner_confirm_found" class="hidden p-3 bg-green-50 border border-green-200 rounded-lg mb-4">
+                                        <p class="text-xs text-green-600 font-medium mb-0.5">Part ditemukan:</p>
+                                        <p id="scanner_confirm_desc" class="text-sm font-semibold text-green-800"></p>
+                                    </div>
+                                    <div id="scanner_confirm_notfound" class="hidden p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
+                                        <p class="text-sm text-red-700"><i class="fas fa-exclamation-circle mr-1"></i>Part tidak ditemukan untuk kode ini.</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <button type="button" id="scanner_use_btn"
+                                                class="hidden flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                                            <i class="fas fa-check mr-2"></i>Gunakan Ini
+                                        </button>
+                                        <button type="button" id="scanner_rescan_btn"
+                                                class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                            <i class="fas fa-redo mr-2"></i>Scan Ulang
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -378,9 +404,28 @@
             }
         });
 
+        document.getElementById('scanner_use_btn').addEventListener('click', () => {
+            if (!pendingScanOpt) return;
+            const opt = pendingScanOpt;
+            pendingScanOpt = null;
+            selectSparepart(opt);
+            scannerModal.classList.add('hidden');
+        });
+
+        document.getElementById('scanner_rescan_btn').addEventListener('click', () => {
+            pendingScanOpt = null;
+            startScanner();
+        });
+
+        let pendingScanOpt = null;
+
         function startScanner() {
             let lastScanText  = '';
             let lastScanCount = 0;
+            pendingScanOpt    = null;
+
+            document.getElementById('scanner_view').classList.remove('hidden');
+            document.getElementById('scanner_confirm').classList.add('hidden');
 
             html5QrCode = new Html5Qrcode("scanner_reader");
             html5QrCode.start(
@@ -391,18 +436,26 @@
                     experimentalFeatures: { useBarCodeDetectorIfSupported: true },
                 },
                 (decodedText) => {
-                    // Require 2 identical consecutive reads to avoid angle-induced misreads
                     if (decodedText === lastScanText) { lastScanCount++; } else { lastScanText = decodedText; lastScanCount = 1; }
                     if (lastScanCount < 2) return;
 
-                    const matchingOpt = Array.from(options).find(opt => opt.dataset.code === decodedText)
-                                     || Array.from(options).find(opt => opt.dataset.code.includes(decodedText) || decodedText.includes(opt.dataset.code));
-                    if (matchingOpt) {
-                        selectSparepart(matchingOpt);
-                        stopScanner();
-                        scannerModal.classList.add('hidden');
+                    stopScanner();
+                    // Exact match only — partial match removed to prevent wrong-part selection
+                    pendingScanOpt = Array.from(options).find(opt => opt.dataset.code === decodedText) || null;
+
+                    document.getElementById('scanner_confirm_code').textContent = decodedText;
+                    document.getElementById('scanner_view').classList.add('hidden');
+                    document.getElementById('scanner_confirm').classList.remove('hidden');
+
+                    if (pendingScanOpt) {
+                        document.getElementById('scanner_confirm_found').classList.remove('hidden');
+                        document.getElementById('scanner_confirm_notfound').classList.add('hidden');
+                        document.getElementById('scanner_confirm_desc').textContent = pendingScanOpt.dataset.description;
+                        document.getElementById('scanner_use_btn').classList.remove('hidden');
                     } else {
-                        alert('Barcode tidak ditemukan: ' + decodedText);
+                        document.getElementById('scanner_confirm_found').classList.add('hidden');
+                        document.getElementById('scanner_confirm_notfound').classList.remove('hidden');
+                        document.getElementById('scanner_use_btn').classList.add('hidden');
                     }
                 },
                 () => {}
